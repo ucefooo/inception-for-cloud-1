@@ -22,7 +22,7 @@ cd /var/www/html
     --dbname=wordpress \
     --dbuser=wordpress \
     --dbpass=wordpress_password \
-    --dbhost=mysql \
+    --dbhost=db \
     --allow-root
 
 echo "Installing WordPress..."

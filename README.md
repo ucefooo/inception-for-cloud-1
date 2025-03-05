@@ -1,128 +1,93 @@
-# WordPress Docker Setup
+# Docker Deployment with Ansible on DigitalOcean
 
-A Docker Compose setup for WordPress with MySQL and PHPMyAdmin, featuring automatic installation and configuration.
-
-## Features
-
-- WordPress latest version
-- MySQL database
-- PHPMyAdmin for database management
-- Automatic WordPress installation
-- Pre-configured admin account
-- Twenty Twenty-Three theme pre-installed
-- Persistent data storage
+This repository contains Ansible playbooks and configuration files to automate the deployment of Docker and your application to DigitalOcean droplets.
 
 ## Prerequisites
 
-- Docker
-- Docker Compose
+1. Ansible installed on your local machine:
+   ```bash
+   pip install ansible
+   ```
 
-## Quick Start
+2. DigitalOcean account and API token
+3. SSH key added to your DigitalOcean account
+4. Python installed on your local machine
+
+## Setup Instructions
 
 1. Clone this repository:
-```bash
-git clone <repository-url>
-cd <repository-name>
-```
+   ```bash
+   git clone <repository-url>
+   cd <repository-directory>
+   ```
 
-2. Start the containers:
-```bash
-docker-compose up
-```
+2. Update the inventory file with your droplet IPs:
+   ```
+   [droplets]
+   droplet1 ansible_host=YOUR_DROPLET_IP
+   ```
 
-3. Access the applications:
-- WordPress: http://localhost:8080
-- PHPMyAdmin: http://localhost:8081
+3. Ensure your SSH key is properly configured:
+   - The default path is `~/.ssh/id_rsa`
+   - If your key is in a different location, update `ansible.cfg`
 
-## Default Credentials
+4. Test the connection:
+   ```bash
+   ansible droplets -m ping
+   ```
 
-### WordPress Admin
-- Username: `admin`
-- Password: `admin123`
-- Email: admin@example.com
+## Deployment
 
-### MySQL
-- Root Password: `root_password`
-- Database: `wordpress`
-- User: `wordpress`
-- Password: `wordpress_password`
+1. Run the playbook:
+   ```bash
+   ansible-playbook playbook.yml
+   ```
 
-### PHPMyAdmin
-- Username: `root`
-- Password: `root_password`
+This will:
+- Install Docker and Docker Compose on your droplets
+- Copy necessary files to the droplets
+- Start the Docker service
+- Deploy your application using docker-compose
 
-## Directory Structure
+## File Structure
 
 ```
 .
-├── docker-compose.yml
-├── docker-entrypoint.sh
-└── README.md
+├── ansible.cfg           # Ansible configuration
+├── inventory            # Inventory file with droplet IPs
+├── playbook.yml         # Main Ansible playbook
+├── docker-compose.yml   # Docker Compose configuration
+└── docker-entrypoint.sh # Entrypoint script for containers
 ```
-
-## Volumes
-
-- `wordpress_data`: Stores WordPress files
-- `mysql_data`: Stores MySQL database files
-
-## Environment Variables
-
-### WordPress
-- `WORDPRESS_DB_HOST`: MySQL host
-- `WORDPRESS_DB_USER`: Database user
-- `WORDPRESS_DB_PASSWORD`: Database password
-- `WORDPRESS_DB_NAME`: Database name
-- `WORDPRESS_DEBUG`: Debug mode (1 for enabled)
-
-### MySQL
-- `MYSQL_ROOT_PASSWORD`: Root password
-- `MYSQL_DATABASE`: Database name
-- `MYSQL_USER`: Database user
-- `MYSQL_PASSWORD`: Database password
-
-### PHPMyAdmin
-- `PMA_HOST`: MySQL host
-- `MYSQL_ROOT_PASSWORD`: Root password
 
 ## Maintenance
 
-### Stop the containers
-```bash
-docker-compose down
-```
+- To update your application:
+  ```bash
+  ansible-playbook playbook.yml --tags update
+  ```
 
-### Stop and remove volumes
-```bash
-docker-compose down -v
-```
-
-### Rebuild containers
-```bash
-docker-compose up --build
-```
-
-### View logs
-```bash
-docker-compose logs -f
-```
+- To check status:
+  ```bash
+  ansible droplets -a "docker-compose -f /opt/app/docker-compose.yml ps"
+  ```
 
 ## Troubleshooting
 
-1. If WordPress can't connect to MySQL:
-   - Ensure MySQL container is running
-   - Check database credentials
-   - Wait a few minutes for MySQL to initialize
+1. If you can't connect to your droplets:
+   - Verify the IP addresses in the inventory file
+   - Check your SSH key permissions
+   - Ensure the droplet's firewall allows SSH (port 22)
 
-2. If you can't access PHPMyAdmin:
-   - Verify MySQL is running
-   - Check if port 8081 is available
-   - Verify root password
+2. If Docker Compose fails:
+   - Check the logs: `ansible droplets -a "docker-compose -f /opt/app/docker-compose.yml logs"`
+   - Verify all required files are present in /opt/app/
 
-3. If WordPress installation fails:
-   - Check container logs
-   - Ensure all environment variables are set
-   - Try rebuilding containers
+## Security Notes
 
-## License
-
-MIT License 
+- The playbook uses root access by default
+- Consider implementing additional security measures:
+  - UFW firewall rules
+  - Non-root user for Docker
+  - Custom SSH port
+  - Rate limiting 
