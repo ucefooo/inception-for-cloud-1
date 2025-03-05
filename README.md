@@ -90,4 +90,85 @@ This will:
   - UFW firewall rules
   - Non-root user for Docker
   - Custom SSH port
-  - Rate limiting 
+  - Rate limiting
+
+# WordPress Docker Development Environment
+
+This repository contains a Vagrant configuration for running WordPress with Docker and Docker Compose.
+
+## Prerequisites
+
+1. [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+2. [Vagrant](https://www.vagrantup.com/downloads)
+
+## Quick Start
+
+1. Clone this repository:
+   ```bash
+   git clone <repository-url>
+   cd <repository-directory>
+   ```
+
+2. Start the VM:
+   ```bash
+   vagrant up
+   ```
+
+That's it! The setup will:
+- Create an Ubuntu 20.04 VM with 4GB RAM and 2 CPUs
+- Install Docker and Docker Compose
+- Set up WordPress and MySQL
+- Configure networking and port forwarding
+
+## Accessing the Services
+
+- WordPress: http://localhost:8080
+- PHPMyAdmin: http://localhost:8081
+
+## Default Credentials
+
+### WordPress Admin
+- Username: admin
+- Password: admin123
+
+### Database
+- Root Password: root_password
+- Database: wordpress
+- User: wordpress
+- Password: wordpress_password
+
+## Vagrant Commands
+
+- Start the VM: `vagrant up`
+- SSH into the VM: `vagrant ssh`
+- Stop the VM: `vagrant halt`
+- Destroy the VM: `vagrant destroy`
+- Rebuild the VM: `vagrant destroy && vagrant up`
+
+## Directory Structure
+
+The project directory is synced to `/opt/app` in the VM. Any changes you make to the files locally will be reflected in the VM automatically.
+
+## Customization
+
+You can modify the following in the Vagrantfile:
+- VM resources (RAM, CPU)
+- Port forwarding
+- Network configuration
+- Provisioning scripts
+
+## Troubleshooting
+
+1. If ports are already in use:
+   - Change the host ports in the Vagrantfile
+   - Run `vagrant reload`
+
+2. If VM fails to start:
+   - Ensure VirtualBox is properly installed
+   - Check if virtualization is enabled in BIOS
+   - Try `vagrant destroy` and then `vagrant up`
+
+3. If services don't start:
+   - SSH into the VM: `vagrant ssh`
+   - Check Docker status: `sudo systemctl status docker`
+   - Check logs: `docker-compose logs` 
