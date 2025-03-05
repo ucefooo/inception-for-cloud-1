@@ -12,7 +12,7 @@ sudo apt-get install -y \
 
 # Add Docker's official GPG key
 echo "Adding Docker's official GPG key..."
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg --yes
 
 # Set up the Docker repository
 echo "Setting up Docker repository..."
@@ -22,7 +22,7 @@ echo \
 
 # Install Docker Engine
 echo "Installing Docker Engine..."
-sudo apt-get update
+sudo apt-get update -y
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # Add current user to docker group

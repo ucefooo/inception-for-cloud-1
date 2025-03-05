@@ -21,25 +21,28 @@
         ssh_keys: ["{{ ssh_key_name }}"]
         wait_timeout: 500
         api_token: "{{ lookup('env', 'DO_API_TOKEN') }}"
-      register: new_droplet
-      tags: ['create']
+      register: droplet
+
+    - name: Debug droplet info
+      debug:
+        var: droplet
 
     - name: Add new droplet to inventory
       add_host:
-        name: "{{ new_droplet.data.ip_address }}"
+        name: "{{ droplet.data.droplet.networks.v4 | selectattr('type', 'eq', 'public') | map(attribute='ip_address') | first }}"
         groups: droplets
-        ansible_host: "{{ new_droplet.data.ip_address }}"
+        ansible_host: "{{ droplet.data.droplet.networks.v4 | selectattr('type', 'eq', 'public') | map(attribute='ip_address') | first }}"
         ansible_user: root
-        ansible_ssh_private_key_file: "~/.ssh/id_rsa"
-      tags: ['create']
+        ansible_ssh_private_key_file: /home/vagrant/.ssh/id_rsa
+      when: droplet.data is defined
 
     - name: Wait for SSH to come up
       wait_for:
-        host: "{{ new_droplet.data.ip_address }}"
+        host: "{{ droplet.data.droplet.networks.v4 | selectattr('type', 'eq', 'public') | map(attribute='ip_address') | first }}"
         port: 22
         delay: 10
         timeout: 300
-      tags: ['create']
+      when: droplet.data is defined
 
 - name: Deploy Docker and application to DigitalOcean droplets
   hosts: droplets
