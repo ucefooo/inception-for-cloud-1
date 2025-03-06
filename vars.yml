@@ -11,7 +11,7 @@ droplet_size: "s-2vcpu-4gb-amd"
 droplet_image: "ubuntu-20-04-x64"
 
 # SSH key name as it appears in your DigitalOcean account
-ssh_key_name: 45923933
+ssh_key_name: 45924536
 
 # Project directory on the droplet
 project_dir: "/opt/app"

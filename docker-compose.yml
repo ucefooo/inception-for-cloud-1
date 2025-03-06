@@ -16,6 +16,8 @@ services:
       db:
         condition: service_healthy
     command: ["/usr/local/bin/docker-entrypoint.sh"]
+    networks:
+      - net_all
 
   db:
     image: mysql:8.0
@@ -33,6 +35,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - net_all
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -45,11 +49,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - net_all
 
 volumes:
   wordpress_data:
   mysql_data:
 
 networks:
-  default:
-    driver: bridge
+  net_all:
+    name: net_all
