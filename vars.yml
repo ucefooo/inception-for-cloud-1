@@ -1,5 +1,5 @@
 # DigitalOcean Droplet Configuration
-droplet_name: "ubuntucloud2"
+droplet_name: "wp20250306"
 
 # Region: Frankfurt
 droplet_region: "fra1"
@@ -11,7 +11,7 @@ droplet_size: "s-2vcpu-4gb-amd"
 droplet_image: "ubuntu-20-04-x64"
 
 # SSH key name as it appears in your DigitalOcean account
-ssh_key_name: 45898805
+ssh_key_name: 45923933
 
 # Project directory on the droplet
-project_dir: "/opt/app" 
+project_dir: "/opt/app"

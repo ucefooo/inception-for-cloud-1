@@ -28,11 +28,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["setproperty", "machinefolder", "/goinfre/" + ENV['USER'] + "/VirtualBox VMs"]
   end
 
-  # Network Configuration
-  config.vm.network "private_network", ip: "192.168.56.10"
-  config.vm.network "forwarded_port", guest: 80, host: 8080    # WordPress
-  config.vm.network "forwarded_port", guest: 8080, host: 8081  # PHPMyAdmin
-
   # Sync the project directory
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
 
